@@ -1,0 +1,3 @@
+Implementações necessárias para o projeto final:
+. bottle (bmvc)
+. adaptação código c# em python
