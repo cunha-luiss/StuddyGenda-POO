@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Theme toggle now prominent inside container -->
+        <button id="toggleTheme" class="theme-toggle" aria-label="Toggle theme">
+            <i id="themeIcon" class="fas fa-moon"></i>
+        </button>
+        <div class="robot-container">
+            <svg id="robot" width="120" height="120" viewBox="0 0 120 120">
+                <!-- Robot head -->
+                <rect x="30" y="20" width="60" height="60" rx="10" fill="#333" stroke="#4CAF50" stroke-width="2" />
+                <!-- Robot antennas -->
+                <line x1="50" y1="20" x2="50" y2="10" stroke="#4CAF50" stroke-width="3" />
+                <line x1="70" y1="20" x2="70" y2="10" stroke="#4CAF50" stroke-width="3" />
+                <circle cx="50" cy="10" r="3" fill="#4CAF50" />
+                <circle cx="70" cy="10" r="3" fill="#4CAF50" />
+                <!-- Robot body -->
+                <rect x="40" y="80" width="40" height="30" rx="5" fill="#333" stroke="#4CAF50" stroke-width="2" />
+                <!-- Robot legs -->
+                <rect x="45" y="110" width="10" height="10" rx="2" fill="#4CAF50" />
+                <rect x="65" y="110" width="10" height="10" rx="2" fill="#4CAF50" />
+                <!-- Robot mouth - now a simple curved line instead of rectangle -->
+                <path id="robot-mouth" d="M45,60 Q60,65 75,60" stroke="#4CAF50" stroke-width="2" fill="none" />
+            </svg>
+            <div class="robot-eyes">
+                <div class="eye left-eye"></div>
+                <div class="eye right-eye"></div>
+            </div>
+        </div>
+        <h2>Create a free account</h2>
+        <form id="loginForm">
+            <div class="input-field">
+                <input type="email" id="email" placeholder="Email" required>
+                <p class="validation-message" id="emailError">Please enter a valid email address</p>
+            </div>
+            <div class="input-field password-container">
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="button" id="togglePassword" aria-label="Toggle password visibility">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <p class="validation-message" id="passwordError">Password must be at least 8 characters</p>
+            </div>
+            <button type="submit" class="login-button">Create a free account</button>
+        </form>
+        <p>By creating an account you agree to our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></p>
+        <p>Already have an account? <a href="#">Log in</a></p>
+    </div>
+    <script src="/static/js/login.js"></script>
+</body>
+</html>

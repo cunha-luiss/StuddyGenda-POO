@@ -1,0 +1,437 @@
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes blink {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+body {
+    margin: 0;
+    background-color: #121212;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.5s, color 0.5s;
+    background-image: radial-gradient(circle at 10% 20%, rgba(90, 92, 106, 0.1) 0%, rgba(32, 45, 58, 0.1) 81.3%);
+}
+
+.login-container {
+    background: rgba(30, 30, 30, 0.8);
+    text-align: center;
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.6s ease-out;
+    transform-origin: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden; /* Prevent child elements from expanding outside */
+    position: relative; /* enable absolute positioning of toggle */
+}
+
+/* Form shake animation */
+#loginForm.shake {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.robot-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
+    animation: float 4s ease-in-out infinite;
+}
+
+#robot {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(76, 175, 80, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.robot-container:hover #robot {
+    transform: scale(1.05);
+}
+
+.robot-eyes {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 25px;
+}
+
+.eye {
+    width: 10px;
+    height: 10px;
+    background: #4CAF50;
+    border-radius: 50%;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.7);
+}
+
+.eye.active {
+    background: #7eff84;
+    animation: blink 1s infinite;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+h2:after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 3px;
+    background: #4CAF50;
+    bottom: -8px;
+    left: 25%;
+    border-radius: 2px;
+    transform-origin: center;
+    transition: width 0.3s, left 0.3s;
+}
+
+.login-container:hover h2:after {
+    width: 70%;
+    left: 15%;
+}
+
+.input-field {
+    margin-bottom: 25px; /* Increased to make space for validation message */
+    position: relative;
+    width: 100%;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px; /* Base padding, right padding will be overridden where necessary */
+    margin: 8px 0 0 0; /* This margin is key for vertical alignment calculations */
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #2a2a2a;
+    color: #fff;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    overflow: hidden; /* Ensures long text does not overflow */
+    text-overflow: ellipsis; /* Shows ellipsis for overflowed text */
+    white-space: nowrap; /* Keeps text on a single line */
+}
+
+input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+    transform: none; /* Removed scale transform on focus */
+}
+
+/* Add padding to inputs to prevent text overlapping icons */
+.input-field input {
+    padding-right: 60px;
+}
+
+.password-container input {
+    padding-right: 90px; /* Adjusted for toggle button (40px + 10px space) + icon (16px + 10px space) */
+}
+
+/* Password field specific styling */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+input.valid, input.invalid {
+    background-position: right 60px center; /* Move validation icon left of toggle button */
+    padding-right: 70px; /* space for validation icon */
+    /* remove extra padding; parent container defines padding */
+}
+
+#togglePassword {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    /* Vertical alignment with the input field */
+    top: 8px; /* Matches input's margin-top */
+    height: 42px; /* Matches input's visual height (16px font + 2*12px padding + 2*1px border) */
+    color: #aaa;
+    transition: color 0.3s;
+    z-index: 2;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    /* Removed transform: translateY(-50%) and other vertical centering properties if they were here */
+}
+
+#togglePassword:hover {
+    color: #4CAF50;
+}
+
+#togglePassword:focus {
+    outline: none;
+}
+
+#togglePassword i {
+    font-size: 16px;
+}
+
+/* Password hidden/shown states */
+.fa-eye-slash {
+    color: #888;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.login-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(69, 160, 73, 0.4);
+}
+
+.login-button:hover:before {
+    left: 100%;
+}
+
+.login-button:active {
+    transform: translateY(1px);
+}
+
+p {
+    margin: 15px 0;
+    color: #aaa;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.3s, text-shadow 0.3s;
+    position: relative;
+}
+
+a:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -1px;
+    left: 0;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+a:hover {
+    color: #45a049;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+a:hover:after {
+    width: 100%;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s, transform 0.3s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.theme-toggle:active {
+    transform: scale(0.9);
+}
+
+.theme-toggle i {
+    transition: transform 0.5s ease, color 0.3s ease;
+}
+
+html.light-mode .theme-toggle {
+    background: #ddd;
+    color: #333;
+}
+
+html.light-mode .theme-toggle:hover {
+    background: #ccc;
+}
+
+html.light-mode #togglePassword {
+    color: #666;
+}
+
+html.light-mode #togglePassword:hover {
+    color: #4CAF50;
+}
+
+html.light-mode .theme-toggle i {
+    color: #f39c12; /* Sun color */
+}
+
+html:not(.light-mode) .theme-toggle i {
+    color: #f1c40f; /* Moon color */
+}
+
+/* Validation styles */
+input.valid {
+    border-color: #4CAF50;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234CAF50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 16px;
+    /* Specific padding and position will be handled by more specific rules below */
+}
+
+input.invalid {
+    border-color: #f44336;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23f44336' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='15' y1='9' x2='9' y2='15'/%3E%3Cline x1='9' y1='9' x2='15' y2='15'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 16px;
+    /* Specific padding and position will be handled by more specific rules below */
+}
+
+/* Validation icon positioning and padding for email input */
+input#email.valid, input#email.invalid {
+    padding-right: 40px; /* Adjusted padding for the icon */
+    background-position: right 10px center; /* Icon position */
+}
+
+/* Validation icon positioning for password input (padding is already set above) */
+.password-container input.valid,
+.password-container input.invalid {
+    background-position: right 50px center; /* Icon positioned to the left of the toggle button */
+}
+
+.validation-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 4px;
+    text-align: left;
+    position: absolute;
+    top: 100%; /* Position below the input field */
+    margin-top: 4px;
+    left: 0;
+    width: 100%;
+    /* allow full height */
+    overflow: visible;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.validation-message.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Light mode overrides */
+html.light-mode body {
+    background-color: #f5f5f5;
+    color: #333;
+    background-image: radial-gradient(circle at 10% 20%, rgba(236, 236, 236, 0.5) 0%, rgba(223, 229, 232, 0.5) 81.3%);
+}
+
+html.light-mode .login-container {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+html.light-mode input {
+    background: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+html.light-mode .theme-toggle {
+    background: #ddd;
+    color: #333;
+}
+
+html.light-mode .theme-toggle:hover {
+    background: #ccc;
+}
+
+html.light-mode #togglePassword {
+    color: #666;
+}
+
+html.light-mode #togglePassword:hover {
+    color: #4CAF50;
+}
+
+html.light-mode .theme-toggle i {
+    color: #f39c12; /* Sun color */
+}
+
+html:not(.light-mode) .theme-toggle i {
+    color: #f1c40f; /* Moon color */
+}
