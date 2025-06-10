@@ -36,7 +36,7 @@
             </div>
         </div>
         <h2>Create a free account</h2>
-        <form id="loginForm">
+        <form id="loginForm" method="POST" action="/logi">
             <div class="input-field">
                 <input name="email" type="email" id="email" placeholder="Email" required>
                 <p class="validation-message" id="emailError">Please enter a valid email address</p>
@@ -48,9 +48,9 @@
                 </button>
                 <p class="validation-message" id="passwordError">Password must be at least 8 characters</p>
             </div>
-            <form method="post" action="/logi">
-                <button type="submit" class="login-button">Create a free account</button>
-            </form>
+            
+            <button type="submit" class="login-button">Create a free account</button>
+            
         </form>
         <p>By creating an account you agree to our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></p>
         <p>Already have an account? <a href="#">Log in</a></p>
