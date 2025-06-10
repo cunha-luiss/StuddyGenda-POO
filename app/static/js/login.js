@@ -154,7 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (loginForm) {
         loginForm.addEventListener("submit", function(e) {
-            e.preventDefault();
             const isEmailValid = emailInput && validateEmail(emailInput.value);
             const isPasswordValid = passwordInput && validatePassword(passwordInput.value);
             

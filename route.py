@@ -22,13 +22,23 @@ def helper(info= None):
 #-----------------------------------------------------------------------------
 # Suas rotas aqui:
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', method='GET')
 def action_login():
     return ctl.render('login')
 
+@app.route('/logi', method='POST')
+def action_portal():
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    session_id, email= ctl.authenticate_user(email, password)
+    if session_id:
+        response.set_cookie('session_id', session_id, httponly=True, \
+        secure=True, max_age=3600)
+        redirect(f'/login/{email}')
+    else:
+        return redirect('/login')
 #-----------------------------------------------------------------------------
 
 
 if __name__ == '__main__':
-
     run(app, host='0.0.0.0', port=8080, debug=True)
