@@ -9,7 +9,11 @@ class DataRecord():
 
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self._path = os.path.join(base_dir, 'controllers', 'db', 'user_accounts.json')
+        self._path = os.path.join(base_dir, 'db', 'user_accounts.json')
+        if not os.path.exists(self._path):
+            with open(self._path, 'w', encoding='utf-8') as f:
+                json.dump([], f)
+
         self.__user_accounts= []
         self.__authenticated_users = {}
         self.read()
@@ -17,7 +21,7 @@ class DataRecord():
 
     def read(self):
         try:
-            with open(self._path, "r") as arquivo_json:
+            with open(self._path, "r", encoding='utf-8') as arquivo_json:
                 user_data = json.load(arquivo_json)
                 self.__user_accounts = [UserAccount(**data) for data in user_data]
         except FileNotFoundError:
@@ -25,10 +29,9 @@ class DataRecord():
 
 
     def book(self,email,password):
-
         new_user= UserAccount(email,password)
         self.__user_accounts.append(new_user)
-        with open(self._path, "w") as arquivo_json:
+        with open(self._path, "w", encoding='utf-8') as arquivo_json:
             user_data = [vars(user_account) for user_account in \
             self.__user_accounts]
             json.dump(user_data, arquivo_json)
