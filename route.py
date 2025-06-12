@@ -25,7 +25,6 @@ def helper(info= None):
 @app.route('/login', method='GET')
 def action_login():
     return ctl.render('login')
-
 @app.route('/logi', method='POST')
 def action_portal():
     email = request.forms.get('email')
@@ -37,6 +36,10 @@ def action_portal():
         redirect(f'/login/{email}')
     else:
         return redirect('/login')
+    
+@app.route('/signup', method='GET')
+def action_signup():
+    return ctl.render('signup')
 #-----------------------------------------------------------------------------
 
 

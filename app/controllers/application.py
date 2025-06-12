@@ -7,11 +7,15 @@ class Application():
     def __init__(self):
 
         self.pages = {
-            'login': self.login
+            'login': self.login,
+            'signup': self.signup
         }
 
         self.__model= DataRecord()
         self.__current_email = None
+
+    def signup(self):
+        return template('app/views/html/signup')
 
 
     def render(self,page,parameter=None):
@@ -20,7 +24,6 @@ class Application():
             return content()
         else:
             return content(parameter)
-
 
     def get_session_id(self):
         return request.get_cookie('session_id')
