@@ -51,7 +51,7 @@ class Application():
             self.logout_user()
             self.__current_email = self.__model.getemail(session_id)
             return session_id, email
-        return None
+        return None, None
 
 
     def logout_user(self):

@@ -160,12 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isEmailValid && isPasswordValid) {
                 // Simulate successful form submission
                 const loginButton = document.querySelector(".login-button");
-                loginButton.textContent = "Creating account...";
+                loginButton.textContent = "Logging in...";
                 loginButton.disabled = true;
                 
                 // Add success animation
                 setTimeout(() => {
-                    loginButton.textContent = "Account created! ✓";
+                    loginButton.textContent = "Welcome back!";
                     loginButton.style.backgroundColor = "#2e7d32";
                     
                     // Animate robot for success - gentle smile

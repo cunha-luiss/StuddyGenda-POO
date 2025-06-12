@@ -30,7 +30,6 @@ def action_login():
 def action_portal():
     email = request.forms.get('email')
     password = request.forms.get('password')
-    print(email)
     session_id, email= ctl.authenticate_user(email, password)
     if session_id:
         response.set_cookie('session_id', session_id, httponly=True, \
