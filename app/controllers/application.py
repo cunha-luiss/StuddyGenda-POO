@@ -17,6 +17,16 @@ class Application():
     def signup(self):
         return template('app/views/html/signup')
 
+    def login(self,email=None):
+        if self.is_authenticated(email):
+            session_id = self.get_session_id()
+            user = self.__model.getCurrentUser(session_id)
+            return template('app/views/html/login', current_user=user)
+        else:
+            return template('app/views/html/login', current_user=None)
+        
+    def new_user(self):
+        return self.__model
 
     def render(self,page,parameter=None):
         content = self.pages.get(page, self.helper)
@@ -31,15 +41,6 @@ class Application():
 
     def helper(self):
         return template('app/views/html/helper')
-
-
-    def login(self,email=None):
-        if self.is_authenticated(email):
-            session_id = self.get_session_id()
-            user = self.__model.getCurrentUser(session_id)
-            return template('app/views/html/login', current_user=user)
-        else:
-            return template('app/views/html/login', current_user=None)
 
 
     def is_authenticated(self, email):

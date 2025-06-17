@@ -32,8 +32,7 @@ class DataRecord():
         new_user= UserAccount(email,password)
         self.__user_accounts.append(new_user)
         with open(self._path, "w", encoding='utf-8') as arquivo_json:
-            user_data = [vars(user_account) for user_account in \
-            self.__user_accounts]
+            user_data = [vars(user_account) for user_account in self.__user_accounts]
             json.dump(user_data, arquivo_json)
 
 

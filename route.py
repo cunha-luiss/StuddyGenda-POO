@@ -2,7 +2,6 @@ from app.controllers.application import Application
 from bottle import Bottle, route, run, request, static_file
 from bottle import redirect, template, response
 
-
 app = Bottle()
 ctl = Application()
 
@@ -31,8 +30,7 @@ def action_portal():
     password = request.forms.get('password')
     session_id, email= ctl.authenticate_user(email, password)
     if session_id:
-        response.set_cookie('session_id', session_id, httponly=True, \
-        secure=True, max_age=3600)
+        response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
         redirect(f'/login/{email}')
     else:
         return redirect('/login')
@@ -40,6 +38,19 @@ def action_portal():
 @app.route('/signup', method='GET')
 def action_signup():
     return ctl.render('signup')
+@app.route('/signu', method='POST')
+def action_portal():
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    new_userT = Application.new_user()
+    new_userT.book(email, password)
+    session_id, email= ctl.authenticate_user(email, password)
+
+    if session_id:
+        response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
+        redirect(f'/signup/{email}')
+    else:
+        return redirect('/signup')
 #-----------------------------------------------------------------------------
 
 
