@@ -1,5 +1,6 @@
 from app.controllers.dataRecord import DataRecord
 from bottle import template, redirect, request
+from app.controllers.lembreteRecord import LembreteRecord
 
 
 class Application():
@@ -27,7 +28,13 @@ class Application():
             return template('app/views/html/login', current_user=None)
     
     def appGenda(self):
-        return('app/views/html/appGenda')
+        session_id = self.get_session_id()
+        if not session_id:
+            return redirect('/login')
+        user_email = self.__model.getemail(session_id)
+        lembrete_record = LembreteRecord(user_email)
+        lembretes = lembrete_record.read()
+        return template('app/views/html/appGenda', lembretes=lembretes)
         
     def new_user(self):
         return self.__model
@@ -67,3 +74,24 @@ class Application():
         session_id = self.get_session_id()
         if session_id:
             self.__model.logout(session_id)
+
+    def add_lembrete(self):
+        session_id = self.get_session_id()
+        if not session_id:
+            return redirect('/login')
+        user_email = self.__model.getemail(session_id)
+        lembrete_record = LembreteRecord(user_email)
+        titulo = request.forms.get('titulo')
+        desc = request.forms.get('desc')
+        prazo = request.forms.get('prazo')
+        lembrete_record.book(titulo, desc, prazo)
+        return redirect('/appGenda')
+
+    def delete_lembrete(self, index):
+        session_id = self.get_session_id()
+        if not session_id:
+            return redirect('/login')
+        user_email = self.__model.getemail(session_id)
+        lembrete_record = LembreteRecord(user_email)
+        lembrete_record.delete(int(index))
+        return redirect('/appGenda')

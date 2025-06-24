@@ -24,6 +24,7 @@ def helper(info= None):
 @app.route('/login', method='GET')
 def action_login():
     return ctl.render('login')
+
 @app.route('/logi', method='POST')
 def action_portal():
     email = request.forms.get('email')
@@ -31,13 +32,14 @@ def action_portal():
     session_id, email= ctl.authenticate_user(email, password)
     if session_id:
         response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
-        redirect(f'/login/{email}')
+        redirect(f'/appGenda')
     else:
         return redirect('/login')
     
 @app.route('/signup', method='GET')
 def action_signup():
     return ctl.render('signup')
+
 @app.route('/signu', method='POST')
 def action_portal():
     email = request.forms.get('email')
@@ -48,13 +50,21 @@ def action_portal():
 
     if session_id:
         response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
-        redirect(f'/signup/{email}')
+        redirect(f'/appGenda')
     else:
         return redirect('/signup')
 
 @app.route('/appGenda', method='GET')
-def appGenda():
+def appGenda_page():
     return ctl.render('appGenda')
+
+@app.route('/add_lembrete', method='POST')
+def add_lembrete_route():
+    return ctl.add_lembrete()
+
+@app.route('/delete_lembrete/<index>', method='GET')
+def delete_lembrete_route(index):
+    return ctl.delete_lembrete(index)
 
 @app.route('/logout', method='POST')
 def logout():

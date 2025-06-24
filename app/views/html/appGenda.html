@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StuddyGenda</title>
+    <link rel="stylesheet" href="/static/css/appGenda.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Meus Lembretes</h1>
+        <form action="/add_lembrete" method="post" class="add-form">
+            <input type="text" name="titulo" placeholder="Título" required>
+            <textarea name="desc" placeholder="Descrição"></textarea>
+            <input type="text" name="prazo" placeholder="Prazo (e.g., DD/MM/AAAA HH:MM)">
+            <button type="submit">Adicionar Lembrete</button>
+        </form>
+        <div class="lembretes-list">
+            % for i, lembrete in enumerate(lembretes):
+            <div class="lembrete">
+                <h3>{{lembrete.titulo}}</h3>
+                <p>{{lembrete.desc}}</p>
+                <small>Prazo: {{lembrete.prazo}}</small>
+                <a href="/delete_lembrete/{{i}}" class="delete-btn">Excluir</a>
+            </div>
+            % end
+        </div>
+         <form action="/logout" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+    <script src="/static/js/appGenda.js"></script>
+</body>
+</html>
