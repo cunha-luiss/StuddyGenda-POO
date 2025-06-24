@@ -8,7 +8,8 @@ class Application():
 
         self.pages = {
             'login': self.login,
-            'signup': self.signup
+            'signup': self.signup,
+            'appGenda': self.appGenda
         }
 
         self.__model= DataRecord()
@@ -24,6 +25,9 @@ class Application():
             return template('app/views/html/login', current_user=user)
         else:
             return template('app/views/html/login', current_user=None)
+    
+    def appGenda(self):
+        return('app/views/html/appGenda')
         
     def new_user(self):
         return self.__model

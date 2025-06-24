@@ -42,7 +42,7 @@ def action_signup():
 def action_portal():
     email = request.forms.get('email')
     password = request.forms.get('password')
-    new_userT = Application.new_user()
+    new_userT = ctl.new_user()
     new_userT.book(email, password)
     session_id, email= ctl.authenticate_user(email, password)
 
@@ -51,6 +51,16 @@ def action_portal():
         redirect(f'/signup/{email}')
     else:
         return redirect('/signup')
+
+@app.route('/appGenda', method='GET')
+def appGenda():
+    return ctl.render('appGenda')
+
+@app.route('/logout', method='POST')
+def logout():
+    ctl.logout_user()
+    response.delete_cookie('session_id')
+    redirect('/')
 #-----------------------------------------------------------------------------
 
 

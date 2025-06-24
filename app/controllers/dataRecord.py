@@ -11,8 +11,7 @@ class DataRecord():
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self._path = os.path.join(base_dir, 'db', 'user_accounts.json')
         if not os.path.exists(self._path):
-            with open(self._path, 'w', encoding='utf-8') as f:
-                json.dump([], f)
+            with open(self._path, 'w', encoding='utf-8') as f:json.dump([], f)
 
         self.__user_accounts= []
         self.__authenticated_users = {}
@@ -25,7 +24,7 @@ class DataRecord():
                 user_data = json.load(arquivo_json)
                 self.__user_accounts = [UserAccount(**data) for data in user_data]
         except FileNotFoundError:
-            self.__user_accounts.append(UserAccount('Guest', '010101'))
+            self.__user_accounts.append(UserAccount('Teste@g.c', '01010101'))
 
 
     def book(self,email,password):
