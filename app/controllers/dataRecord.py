@@ -55,7 +55,10 @@ class DataRecord():
                 return session_id
         return None  # Retorna None se o usuário não for encontrado
 
-
+    def exists(self, email):
+        """Retorna True se um usuário com o email dado já estiver cadastrado"""
+        return any(user.email == email for user in self.__user_accounts)
+    
     def checkUser(self, email, password):
         for user in self.__user_accounts:
             if user.email == email and user.password == password:

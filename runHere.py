@@ -13,11 +13,6 @@ ctl = Application()
 def serve_static(filepath):
     return static_file(filepath, root='./app/static')
 
-@app.route('/helper')
-def helper(info= None):
-    return ctl.render('helper')
-
-
 #-----------------------------------------------------------------------------
 # Suas rotas aqui:
 @app.route('/')
@@ -44,15 +39,20 @@ def action_signup():
 def action_portal():
     email = request.forms.get('email')
     password = request.forms.get('password')
-    new_userT = ctl.new_user()
-    new_userT.book(email, password)
-    session_id, email= ctl.authenticate_user(email, password)
+    model = ctl.new_user()
 
-    if session_id:
-        response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
-        redirect(f'/appGenda')
-    else:
-        return redirect('/signup')
+    # Se já existir conta com o email
+    if model.exists(email):
+        return template('app/views/html/signup', error='Já existe uma conta com este email')
+    # Se senha menor que 8 caracteres
+    elif len(password) < 8:
+        return template('app/views/html/signup', error='Senha deve ter ao menos 8 caracteres')
+
+    # Cria usuário e autentica
+    model.book(email, password)
+    session_id, _ = ctl.authenticate_user(email, password)
+    response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
+    redirect(f'/appGenda')
 
 @app.route('/appGenda', method='GET')
 def appGenda_page():

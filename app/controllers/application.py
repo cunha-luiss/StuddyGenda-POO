@@ -3,7 +3,6 @@ from bottle import template, redirect, request
 from app.controllers.lembreteRecord import LembreteRecord
 from app.controllers.taskRecord import TaskRecord
 from app.controllers.timerRecord import TimerRecord
-import math
 
 class Application():
 
@@ -13,14 +12,13 @@ class Application():
             'login': self.login,
             'signup': self.signup,
             'appGenda': self.appGenda,
-            'calculator': self.calculator
         }
 
         self.__model= DataRecord()
         self.__current_email = None
 
-    def signup(self):
-        return template('app/views/html/signup')
+    def signup(self, error=None):
+        return template('app/views/html/signup', error=error)
 
     def login(self,email=None):
         if self.is_authenticated(email):
@@ -47,7 +45,7 @@ class Application():
         return self.__model
 
     def render(self,page,parameter=None):
-        content = self.pages.get(page, self.helper)
+        content = self.pages.get(page, self.login)
         if not parameter:
             return content()
         else:
@@ -55,10 +53,6 @@ class Application():
 
     def get_session_id(self):
         return request.get_cookie('session_id')
-
-
-    def helper(self):
-        return template('app/views/html/helper')
 
 
     def is_authenticated(self, email):
@@ -141,33 +135,3 @@ class Application():
         timer_record = TimerRecord(user_email)
         timer_record.delete(int(index))
         return redirect('/appGenda')
-    
-    def calculator(self):
-        return template('app/views/html/calculator', result=None)
-
-    def calculate(self):
-        num1 = float(request.forms.get('num1'))
-        num2 = float(request.forms.get('num2'))
-        operation = request.forms.get('operation')
-        result = 0
-
-        if operation == 'soma':
-            result = num1 + num2
-        elif operation == 'subtracao':
-            result = num1 - num2
-        elif operation == 'multiplicacao':
-            result = num1 * num2
-        elif operation == 'divisao':
-            if num2 != 0:
-                result = num1 / num2
-            else:
-                result = "Erro: Divisão por zero"
-        elif operation == 'potencia':
-            result = math.pow(num1, num2)
-        elif operation == 'radiciacao':
-            if num2 != 0:
-                result = math.pow(num1, 1/num2)
-            else:
-                result = "Erro: Raiz com índice zero"
-
-        return template('app/views/html/calculator', result=result)

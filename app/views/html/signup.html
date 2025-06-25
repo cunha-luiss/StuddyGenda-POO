@@ -9,6 +9,9 @@
 </head>
 <body>
     <div class="login-container">
+        % if error:
+        <div class="error-message">{{error}}</div>
+        % end
         <!-- Theme toggle now prominent inside container -->
         <button id="toggleTheme" class="theme-toggle" aria-label="Toggle theme">
             <i id="themeIcon" class="fas fa-moon"></i>
