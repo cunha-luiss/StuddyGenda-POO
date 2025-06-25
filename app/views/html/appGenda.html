@@ -5,30 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StuddyGenda</title>
     <link rel="stylesheet" href="/static/css/appGenda.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <button id="toggleTheme" class="theme-toggle" aria-label="Toggle theme">
+        <i id="themeIcon" class="fas fa-moon"></i>
+    </button>
     <div class="container">
-        <h1>Meus Lembretes</h1>
-        <form action="/add_lembrete" method="post" class="add-form">
-            <input type="text" name="titulo" placeholder="Título" required>
-            <textarea name="desc" placeholder="Descrição"></textarea>
-            <input type="text" name="prazo" placeholder="Prazo (e.g., DD/MM/AAAA HH:MM)">
-            <button type="submit">Adicionar Lembrete</button>
-        </form>
-        <div class="lembretes-list">
-            % for i, lembrete in enumerate(lembretes):
-            <div class="lembrete">
-                <h3>{{lembrete.titulo}}</h3>
-                <p>{{lembrete.desc}}</p>
-                <small>Prazo: {{lembrete.prazo}}</small>
-                <a href="/delete_lembrete/{{i}}" class="delete-btn">Excluir</a>
+         <h1>Minha Agenda</h1>
+        
+        <div class="column">
+            <h2>Lembretes</h2>
+            <form action="/add_lembrete" method="post" class="add-form">
+                <input type="text" name="titulo" placeholder="Título" required>
+                <textarea name="desc" placeholder="Descrição"></textarea>
+                <input type="text" name="prazo" placeholder="Prazo (e.g., DD/MM/AAAA HH:MM)">
+                <button type="submit">Adicionar Lembrete</button>
+            </form>
+            <div class="lembretes-list">
+                % for i, lembrete in enumerate(lembretes):
+                <div class="lembrete">
+                    <h3>{{lembrete.titulo}}</h3>
+                    <p>{{lembrete.desc}}</p>
+                    <small>Prazo: {{lembrete.prazo}}</small>
+                    <a href="/delete_lembrete/{{i}}" class="delete-btn">Excluir</a>
+                </div>
+                % end
             </div>
-            % end
         </div>
-         <form action="/logout" method="post">
-            <button type="submit">Logout</button>
+
+        <div class="column">
+            <h2>Tarefas</h2>
+            <form action="/add_task" method="post" class="add-form">
+                <input type="text" name="nome" placeholder="Nome da Tarefa" required>
+                <input type="number" name="prioridade" placeholder="Prioridade">
+                <button type="submit">Adicionar Tarefa</button>
+            </form>
+            <div class="tasks-list">
+                % for i, task in enumerate(tasks):
+                <div class="task">
+                    <h3>{{task.nome}}</h3>
+                    <p>Prioridade: {{task.prioridade}}</p>
+                    <a href="/delete_task/{{i}}" class="delete-btn">Excluir</a>
+                </div>
+                % end
+            </div>
+        </div>
+
+        <div class="column">
+            <h2>Temporizadores</h2>
+            <form action="/add_timer" method="post" class="add-form">
+                <input type="number" name="tempo" placeholder="Tempo (minutos)" required>
+                <button type="submit">Adicionar Temporizador</button>
+            </form>
+            <div class="timers-list">
+                % for i, timer in enumerate(timers):
+                <div class="timer">
+                    <p>{{timer.tempo}} minutos</p>
+                    <a href="/delete_timer/{{i}}" class="delete-btn">Excluir</a>
+                </div>
+                % end
+            </div>
+        </div>
+
+        <form action="/logout" method="post">
+           <button type="submit" class="logout-btn">
+               <i class="fas fa-sign-out-alt"></i> Logout
+           </button>
         </form>
     </div>
+    <script src="/static/js/login.js"></script>
     <script src="/static/js/appGenda.js"></script>
 </body>
 </html>

@@ -1,18 +1,47 @@
+/* Adicionado variáveis de tema e animação */
+:root {
+    --primary-color: #4CAF50;
+    --bg-dark: #121212;
+    --card-bg: rgba(30, 30, 30, 0.8);
+    --text-color: #fff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 body {
     font-family: sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 10% 20%, rgba(90, 92, 106, 0.1) 0%, rgba(32, 45, 58, 0.1) 81.3%);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     margin: 0;
     padding: 20px;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: auto;
-    background: #fff;
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.column {
+    flex: 1;
+    min-width: 300px;
 }
 
 .add-form {
@@ -22,31 +51,145 @@ body {
     margin-bottom: 20px;
 }
 
-.add-form input, .add-form textarea {
+.add-form input,
+.add-form textarea,
+.add-form select {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     border-radius: 4px;
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.add-form input:focus,
+.add-form textarea:focus,
+.add-form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
 }
 
 .add-form button {
     padding: 10px 15px;
     border: none;
-    background-color: #4CAF50;
+    background-color: var(--primary-color);
     color: white;
     border-radius: 4px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.lembretes-list .lembrete {
-    background: #f9f9f9;
+.add-form button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(69,160,73,0.4);
+}
+
+.lembretes-list .lembrete,
+.tasks-list .task,
+.timers-list .timer {
+    background: #2a2a2a;
+    color: #fff;
     padding: 15px;
     border-radius: 4px;
     margin-bottom: 10px;
-    border-left: 5px solid #4CAF50;
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    animation: fadeIn 0.6s ease-out;
 }
 
 .delete-btn {
     color: #f44336;
     text-decoration: none;
     float: right;
+}
+
+/* Botão de alternância de tema */
+.theme-toggle {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s, transform 0.3s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.theme-toggle:active {
+    transform: scale(0.9);
+}
+
+.theme-toggle i {
+    transition: transform 0.5s ease, color 0.3s ease;
+}
+
+/* Botão de Logout estilizado */
+.logout-btn {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+.logout-btn i {
+    transition: transform 0.5s ease, color 0.3s ease;
+}
+.logout-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+.logout-btn:active {
+    transform: translateY(0);
+}
+
+/* Posicionamento do botão logout no canto inferior direito do container */
+.container form.logout-form {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* Light-mode overrides */
+html.light-mode body {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+html.light-mode .container {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+html.light-mode .theme-toggle {
+    background: #ddd;
+    color: #333;
+}
+
+html.light-mode .theme-toggle:hover {
+    background: #ccc;
+}
+
+html.light-mode .theme-toggle i {
+    color: #f39c12; /* Sol */
+}
+
+html:not(.light-mode) .theme-toggle i {
+    color: #f1c40f; /* Lua */
 }

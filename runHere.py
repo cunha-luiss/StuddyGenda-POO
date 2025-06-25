@@ -66,6 +66,22 @@ def add_lembrete_route():
 def delete_lembrete_route(index):
     return ctl.delete_lembrete(index)
 
+@app.route('/add_task', method='POST')
+def add_task_route():
+    return ctl.add_task()
+
+@app.route('/delete_task/<index>', method='GET')
+def delete_task_route(index):
+    return ctl.delete_task(index)
+
+@app.route('/add_timer', method='POST')
+def add_timer_route():
+    return ctl.add_timer()
+
+@app.route('/delete_timer/<index>', method='GET')
+def delete_timer_route(index):
+    return ctl.delete_timer(index)
+
 @app.route('/logout', method='POST')
 def logout():
     ctl.logout_user()

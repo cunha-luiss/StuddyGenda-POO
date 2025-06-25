@@ -1,7 +1,9 @@
 from app.controllers.dataRecord import DataRecord
 from bottle import template, redirect, request
 from app.controllers.lembreteRecord import LembreteRecord
-
+from app.controllers.taskRecord import TaskRecord
+from app.controllers.timerRecord import TimerRecord
+import math
 
 class Application():
 
@@ -10,7 +12,8 @@ class Application():
         self.pages = {
             'login': self.login,
             'signup': self.signup,
-            'appGenda': self.appGenda
+            'appGenda': self.appGenda,
+            'calculator': self.calculator
         }
 
         self.__model= DataRecord()
@@ -33,8 +36,12 @@ class Application():
             return redirect('/login')
         user_email = self.__model.getemail(session_id)
         lembrete_record = LembreteRecord(user_email)
+        task_record = TaskRecord(user_email)
+        timer_record = TimerRecord(user_email)
         lembretes = lembrete_record.read()
-        return template('app/views/html/appGenda', lembretes=lembretes)
+        tasks = task_record.read()
+        timers = timer_record.read()
+        return template('app/views/html/appGenda', lembretes=lembretes, tasks=tasks, timers=timers)
         
     def new_user(self):
         return self.__model
@@ -95,3 +102,72 @@ class Application():
         lembrete_record = LembreteRecord(user_email)
         lembrete_record.delete(int(index))
         return redirect('/appGenda')
+
+    def add_task(self):
+        session_id = self.get_session_id()
+        if not session_id:
+            return redirect('/login')
+        user_email = self.__model.getemail(session_id)
+        task_record = TaskRecord(user_email)
+        nome = request.forms.get('nome')
+        prioridade = request.forms.get('prioridade')
+        task_record.book(nome, prioridade)
+        return redirect('/appGenda')
+
+    def delete_task(self, index):
+        session_id = self.get_session_id()
+        if not session_id:
+            return redirect('/login')
+        user_email = self.__model.getemail(session_id)
+        task_record = TaskRecord(user_email)
+        task_record.delete(int(index))
+        return redirect('/appGenda')
+
+    def add_timer(self):
+        session_id = self.get_session_id()
+        if not session_id:
+            return redirect('/login')
+        user_email = self.__model.getemail(session_id)
+        timer_record = TimerRecord(user_email)
+        tempo = request.forms.get('tempo')
+        timer_record.book(tempo)
+        return redirect('/appGenda')
+
+    def delete_timer(self, index):
+        session_id = self.get_session_id()
+        if not session_id:
+            return redirect('/login')
+        user_email = self.__model.getemail(session_id)
+        timer_record = TimerRecord(user_email)
+        timer_record.delete(int(index))
+        return redirect('/appGenda')
+    
+    def calculator(self):
+        return template('app/views/html/calculator', result=None)
+
+    def calculate(self):
+        num1 = float(request.forms.get('num1'))
+        num2 = float(request.forms.get('num2'))
+        operation = request.forms.get('operation')
+        result = 0
+
+        if operation == 'soma':
+            result = num1 + num2
+        elif operation == 'subtracao':
+            result = num1 - num2
+        elif operation == 'multiplicacao':
+            result = num1 * num2
+        elif operation == 'divisao':
+            if num2 != 0:
+                result = num1 / num2
+            else:
+                result = "Erro: Divisão por zero"
+        elif operation == 'potencia':
+            result = math.pow(num1, num2)
+        elif operation == 'radiciacao':
+            if num2 != 0:
+                result = math.pow(num1, 1/num2)
+            else:
+                result = "Erro: Raiz com índice zero"
+
+        return template('app/views/html/calculator', result=result)
