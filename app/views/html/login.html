@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Página de login</title>
     <link rel="stylesheet" href="/static/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -35,25 +35,25 @@
                 <div class="eye right-eye"></div>
             </div>
         </div>
-        <h2>Welcome back to StuddyGenda!</h2>
+        <h2>Seja Bem vindo de volta ao StuddyGenda!</h2>
         <form id="loginForm" method="POST" action="/logi">
             <div class="input-field">
                 <input name="email" type="email" id="email" placeholder="Email" required>
-                <p class="validation-message" id="emailError">Please enter a valid email address</p>
+                <p class="validation-message" id="emailError">Insira um endereço de email válido</p>
             </div>
             <div class="input-field password-container">
-                <input name= "password" type="password" id="password" placeholder="Password" required>
+                <input name= "password" type="password" id="password" placeholder="Senha" required>
                 <button type="button" id="togglePassword" aria-label="Toggle password visibility">
                     <i class="fas fa-eye"></i>
                 </button>
-                <p class="validation-message" id="passwordError">Password must be at least 8 characters</p>
+                <p class="validation-message" id="passwordError">Senha deve possuir mais de 8 caractéres</p>
             </div>
             
             <button type="submit" class="login-button">Log in</button>
             
         </form>
-        <p>By creating an account you agree to our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></p>
-        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        <p>Ao criar uma conta, você concorda com os <a href="#">Termos de Serviço</a> & <a href="#">Política de Privacidade</a></p>
+        <p>Ainda não tem uma conta? <a href="/signup">Sign up</a></p>
     </div>
     <script src="/static/js/login.js"></script>
 </body>

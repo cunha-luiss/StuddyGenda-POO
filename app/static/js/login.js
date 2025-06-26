@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Add success animation
                 setTimeout(() => {
-                    loginButton.textContent = "Welcome back!";
+                    loginButton.textContent = "Seja bem vindo de volta!";
                     loginButton.style.backgroundColor = "#2e7d32";
                     
                     // Animate robot for success - gentle smile
