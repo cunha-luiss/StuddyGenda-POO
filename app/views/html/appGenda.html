@@ -1,80 +1,308 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StuddyGenda</title>
+    <title>StuddyGenda - Sua Agenda Inteligente</title>
     <link rel="stylesheet" href="/static/css/appGenda.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <button id="toggleTheme" class="theme-toggle" aria-label="Toggle theme">
-        <i id="themeIcon" class="fas fa-moon"></i>
-    </button>
-    <div class="container">
-         <h1>Minha Agenda</h1>
-        
-        <div class="column">
-            <h2>Lembretes</h2>
-            <form action="/add_lembrete" method="post" class="add-form">
-                <input type="text" name="titulo" placeholder="Título" required>
-                <textarea name="desc" placeholder="Descrição"></textarea>
-                <input type="text" name="prazo" placeholder="Prazo (e.g., DD/MM/AAAA HH:MM)">
-                <button type="submit">Adicionar Lembrete</button>
-            </form>
-            <div class="lembretes-list">
-                % for i, lembrete in enumerate(lembretes):
-                <div class="lembrete">
-                    <h3>{{lembrete.titulo}}</h3>
-                    <p>{{lembrete.desc}}</p>
-                    <small>Prazo: {{lembrete.prazo}}</small>
-                    <a href="/delete_lembrete/{{i}}" class="delete-btn">Excluir</a>
+    <!-- Header com controles -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="robot-container">
+                    <svg id="robot" width="40" height="40" viewBox="0 0 120 120">
+                        <!-- Robot head -->
+                        <rect x="30" y="20" width="60" height="60" rx="10" fill="#333" stroke="#4CAF50" stroke-width="2" />
+                        <!-- Robot antennas -->
+                        <line x1="50" y1="20" x2="50" y2="10" stroke="#4CAF50" stroke-width="3" />
+                        <line x1="70" y1="20" x2="70" y2="10" stroke="#4CAF50" stroke-width="3" />
+                        <circle cx="50" cy="10" r="3" fill="#4CAF50" />
+                        <circle cx="70" cy="10" r="3" fill="#4CAF50" />
+                        <!-- Robot body -->
+                        <rect x="40" y="80" width="40" height="30" rx="5" fill="#333" stroke="#4CAF50" stroke-width="2" />
+                        <!-- Robot legs -->
+                        <rect x="45" y="110" width="10" height="10" rx="2" fill="#4CAF50" />
+                        <rect x="65" y="110" width="10" height="10" rx="2" fill="#4CAF50" />
+                        <!-- Robot mouth -->
+                        <path id="robot-mouth" d="M45,60 Q60,65 75,60" stroke="#4CAF50" stroke-width="2" fill="none" />
+                    </svg>
+                    <div class="robot-eyes">
+                        <div class="eye left-eye"></div>
+                        <div class="eye right-eye"></div>
+                    </div>
                 </div>
-                % end
+                <h1>StuddyGenda</h1>
+            </div>
+            <div class="header-controls">
+                <button id="toggleTheme" class="theme-toggle" aria-label="Alternar tema">
+                    <i id="themeIcon" class="fas fa-moon"></i>
+                </button>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </button>
+                </form>
             </div>
         </div>
+    </header>
 
-        <div class="column">
-            <h2>Tarefas</h2>
-            <form action="/add_task" method="post" class="add-form">
-                <input type="text" name="nome" placeholder="Nome da Tarefa" required>
-                <input type="number" name="prioridade" placeholder="Prioridade">
-                <button type="submit">Adicionar Tarefa</button>
-            </form>
-            <div class="tasks-list">
-                % for i, task in enumerate(tasks):
-                <div class="task">
-                    <h3>{{task.nome}}</h3>
-                    <p>Prioridade: {{task.prioridade}}</p>
-                    <a href="/delete_task/{{i}}" class="delete-btn">Excluir</a>
+    <!-- Navegação por Tabs -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <button class="tab-btn active" data-tab="lembretes">
+                <i class="fas fa-sticky-note"></i>
+                <span>Lembretes</span>
+                <span class="tab-count">{{len(lembretes)}}</span>
+            </button>
+            <button class="tab-btn" data-tab="tarefas">
+                <i class="fas fa-tasks"></i>
+                <span>Tarefas</span>
+                <span class="tab-count">{{len(tasks)}}</span>
+            </button>
+            <button class="tab-btn" data-tab="timers">
+                <i class="fas fa-clock"></i>
+                <span>Timers</span>
+                <span class="tab-count">{{len(timers)}}</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Conteúdo das Tabs -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Tab Lembretes -->
+            <div id="lembretes" class="tab-content active">
+                <div class="tab-header">
+                    <h2>
+                        <i class="fas fa-sticky-note"></i>
+                        Meus Lembretes
+                    </h2>
+                    <p class="tab-subtitle">Organize seus lembretes importantes</p>
                 </div>
-                % end
+                
+                <div class="content-grid">
+                    <div class="form-section">
+                        <div class="card form-card">
+                            <h3><i class="fas fa-plus-circle"></i> Novo Lembrete</h3>
+                            <form action="/add_lembrete" method="post" class="add-form">
+                                <div class="input-group">
+                                    <i class="fas fa-heading"></i>
+                                    <input type="text" name="titulo" placeholder="Título do lembrete" required>
+                                </div>
+                                <div class="input-group">
+                                    <i class="fas fa-align-left"></i>
+                                    <textarea name="desc" placeholder="Descrição detalhada" rows="3"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <input type="text" name="prazo" placeholder="Prazo (DD/MM/AAAA HH:MM)">
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Adicionar Lembrete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="items-section">
+                        <div class="items-grid">
+                            % if lembretes:
+                                % for i, lembrete in enumerate(lembretes):
+                                <div class="item-card lembrete-card">
+                                    <div class="item-header">
+                                        <h4>{{lembrete.titulo}}</h4>
+                                        <button class="delete-btn" onclick="confirmDelete('/delete_lembrete/{{i}}', 'lembrete')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="item-content">
+                                        <p>{{lembrete.desc}}</p>
+                                        % if lembrete.prazo:
+                                        <div class="item-meta">
+                                            <i class="fas fa-clock"></i>
+                                            <span>{{lembrete.prazo}}</span>
+                                        </div>
+                                        % end
+                                    </div>
+                                </div>
+                                % end
+                            % else:
+                                <div class="empty-state">
+                                    <i class="fas fa-sticky-note"></i>
+                                    <h3>Nenhum lembrete ainda</h3>
+                                    <p>Adicione seu primeiro lembrete para começar!</p>
+                                </div>
+                            % end
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Tarefas -->
+            <div id="tarefas" class="tab-content">
+                <div class="tab-header">
+                    <h2>
+                        <i class="fas fa-tasks"></i>
+                        Minhas Tarefas
+                    </h2>
+                    <p class="tab-subtitle">Gerencie suas tarefas por prioridade</p>
+                </div>
+                
+                <div class="content-grid">
+                    <div class="form-section">
+                        <div class="card form-card">
+                            <h3><i class="fas fa-plus-circle"></i> Nova Tarefa</h3>
+                            <form action="/add_task" method="post" class="add-form">
+                                <div class="input-group">
+                                    <i class="fas fa-tag"></i>
+                                    <input type="text" name="nome" placeholder="Nome da tarefa" required>
+                                </div>
+                                <div class="input-group">
+                                    <i class="fas fa-star"></i>
+                                    <select name="prioridade" required>
+                                        <option value="">Selecione a prioridade</option>
+                                        <option value="1">🔴 Alta (1)</option>
+                                        <option value="2">🟡 Média (2)</option>
+                                        <option value="3">🟢 Baixa (3)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Adicionar Tarefa
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="items-section">
+                        <div class="items-grid">
+                            % if tasks:
+                                % for i, task in enumerate(tasks):
+                                <div class="item-card task-card priority-{{task.prioridade}}">
+                                    <div class="item-header">
+                                        <h4>{{task.nome}}</h4>
+                                        <button class="delete-btn" onclick="confirmDelete('/delete_task/{{i}}', 'tarefa')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="item-content">
+                                        <div class="item-meta">
+                                            <div class="priority-badge priority-{{task.prioridade}}">
+                                                % if task.prioridade == 1:
+                                                    🔴 Alta
+                                                % elif task.prioridade == 2:
+                                                    🟡 Média  
+                                                % else:
+                                                    🟢 Baixa
+                                                % end
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                % end
+                            % else:
+                                <div class="empty-state">
+                                    <i class="fas fa-tasks"></i>
+                                    <h3>Nenhuma tarefa ainda</h3>
+                                    <p>Adicione sua primeira tarefa para começar!</p>
+                                </div>
+                            % end
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Timers -->
+            <div id="timers" class="tab-content">
+                <div class="tab-header">
+                    <h2>
+                        <i class="fas fa-clock"></i>
+                        Meus Timers
+                    </h2>
+                    <p class="tab-subtitle">Controle seu tempo de estudo</p>
+                </div>
+                
+                <div class="content-grid">
+                    <div class="form-section">
+                        <div class="card form-card">
+                            <h3><i class="fas fa-plus-circle"></i> Novo Timer</h3>
+                            <form action="/add_timer" method="post" class="add-form">
+                                <div class="input-group">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    <input type="number" name="tempo" placeholder="Tempo em minutos" min="1" max="180" required>
+                                </div>
+                                <div class="time-presets">
+                                    <button type="button" class="preset-btn" onclick="setTime(25)">Pomodoro (25min)</button>
+                                    <button type="button" class="preset-btn" onclick="setTime(15)">Pausa (15min)</button>
+                                    <button type="button" class="preset-btn" onclick="setTime(60)">Hora (60min)</button>
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Adicionar Timer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="items-section">
+                        <div class="items-grid">
+                            % if timers:
+                                % for i, timer in enumerate(timers):
+                                <div class="item-card timer-card">
+                                    <div class="item-header">
+                                        <h4>
+                                            <i class="fas fa-stopwatch"></i>
+                                            Timer {{i + 1}}
+                                        </h4>
+                                        <button class="delete-btn" onclick="confirmDelete('/delete_timer/{{i}}', 'timer')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="item-content">
+                                        <div class="timer-display">
+                                            <span class="timer-time">{{timer.tempo}}</span>
+                                            <span class="timer-unit">minutos</span>
+                                        </div>
+                                        <div class="timer-controls">
+                                            <button class="btn-secondary" onclick="startTimer({{i}}, {{timer.tempo}})">
+                                                <i class="fas fa-play"></i>
+                                                Iniciar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                % end
+                            % else:
+                                <div class="empty-state">
+                                    <i class="fas fa-clock"></i>
+                                    <h3>Nenhum timer ainda</h3>
+                                    <p>Adicione seu primeiro timer para começar!</p>
+                                </div>
+                            % end
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </main>
 
-        <div class="column">
-            <h2>Temporizadores</h2>
-            <form action="/add_timer" method="post" class="add-form">
-                <input type="number" name="tempo" placeholder="Tempo (minutos)" required>
-                <button type="submit">Adicionar Temporizador</button>
-            </form>
-            <div class="timers-list">
-                % for i, timer in enumerate(timers):
-                <div class="timer">
-                    <p>{{timer.tempo}} minutos</p>
-                    <a href="/delete_timer/{{i}}" class="delete-btn">Excluir</a>
-                </div>
-                % end
+    <!-- Modal de confirmação -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar exclusão</h3>
+            <p>Tem certeza que deseja excluir este item?</p>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn-danger" onclick="executeDelete()">Excluir</button>
             </div>
         </div>
-
-        <form action="/logout" method="post">
-           <button type="submit" class="logout-btn">
-               <i class="fas fa-sign-out-alt"></i> Logout
-           </button>
-        </form>
     </div>
-    <script src="/static/js/login.js"></script>
+
     <script src="/static/js/appGenda.js"></script>
 </body>
 </html>

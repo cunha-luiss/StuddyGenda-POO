@@ -27,7 +27,7 @@ def action_portal():
     session_id, email= ctl.authenticate_user(email, password)
     if session_id:
         response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
-        redirect(f'/appGenda')
+        return redirect('/appGenda')
     else:
         return redirect('/login')
     
@@ -36,7 +36,7 @@ def action_signup():
     return ctl.render('signup')
 
 @app.route('/signu', method='POST')
-def action_portal():
+def action_signup_post():
     email = request.forms.get('email')
     password = request.forms.get('password')
     model = ctl.new_user()
@@ -52,7 +52,7 @@ def action_portal():
     model.book(email, password)
     session_id, _ = ctl.authenticate_user(email, password)
     response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
-    redirect(f'/appGenda')
+    return redirect('/appGenda')
 
 @app.route('/appGenda', method='GET')
 def appGenda_page():
@@ -86,7 +86,7 @@ def delete_timer_route(index):
 def logout():
     ctl.logout_user()
     response.delete_cookie('session_id')
-    redirect('/')
+    return redirect('/')
 #-----------------------------------------------------------------------------
 
 

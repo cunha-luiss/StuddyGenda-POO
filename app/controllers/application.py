@@ -105,6 +105,13 @@ class Application():
         task_record = TaskRecord(user_email)
         nome = request.forms.get('nome')
         prioridade = request.forms.get('prioridade')
+        
+        # Converter prioridade para inteiro
+        try:
+            prioridade = int(prioridade)
+        except (ValueError, TypeError):
+            prioridade = 3  # Padrão baixa se houver erro
+            
         task_record.book(nome, prioridade)
         return redirect('/appGenda')
 
