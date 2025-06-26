@@ -103,8 +103,6 @@ A SER IMPLEMENTADO...
 - **Esc**: Fechar modais
 - **Tab**: Navegação acessível
 
-```
-
 ## 🔮 **Próximas Funcionalidades**
 
 - 🔄 **Sincronização**: Backup em nuvem
