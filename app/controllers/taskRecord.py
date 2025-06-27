@@ -5,7 +5,7 @@ from app.models.task import Task
 class TaskRecord:
     def __init__(self, user_email):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self._path = os.path.join(base_dir, 'db', f'{user_email}_tasks.json')
+        self._path = os.path.join(base_dir, 'db/task', f'{user_email}_tasks.json')
         if not os.path.exists(self._path):
             with open(self._path, 'w', encoding='utf-8') as f:
                 json.dump([], f)
