@@ -25,11 +25,11 @@ class LembreteRecord:
         self.__lembretes.append(new_lembrete)
         with open(self._path, "w", encoding='utf-8') as arquivo_json:
             lembrete_data = [vars(lembrete) for lembrete in self.__lembretes]
-            json.dump(lembrete_data, arquivo_json, indent=4)
+            json.dump(lembrete_data, arquivo_json, indent=4, ensure_ascii=False)
 
     def delete(self, index):
         if 0 <= index < len(self.__lembretes):
             del self.__lembretes[index]
             with open(self._path, "w", encoding='utf-8') as arquivo_json:
                 lembrete_data = [vars(lembrete) for lembrete in self.__lembretes]
-                json.dump(lembrete_data, arquivo_json, indent=4)
+                json.dump(lembrete_data, arquivo_json, indent=4, ensure_ascii=False)

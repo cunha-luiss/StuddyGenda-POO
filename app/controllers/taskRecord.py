@@ -25,11 +25,11 @@ class TaskRecord:
         self.__tasks.append(new_task)
         with open(self._path, "w", encoding='utf-8') as arquivo_json:
             task_data = [vars(task) for task in self.__tasks]
-            json.dump(task_data, arquivo_json, indent=4)
+            json.dump(task_data, arquivo_json, indent=4, ensure_ascii=False)
 
     def delete(self, index):
         if 0 <= index < len(self.__tasks):
             del self.__tasks[index]
             with open(self._path, "w", encoding='utf-8') as arquivo_json:
                 task_data = [vars(task) for task in self.__tasks]
-                json.dump(task_data, arquivo_json, indent=4)
+                json.dump(task_data, arquivo_json, indent=4, ensure_ascii=False)

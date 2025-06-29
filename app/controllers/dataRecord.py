@@ -11,7 +11,8 @@ class DataRecord():
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self._path = os.path.join(base_dir, 'db', 'user_accounts.json')
         if not os.path.exists(self._path):
-            with open(self._path, 'w', encoding='utf-8') as f:json.dump([], f)
+            with open(self._path, 'w', encoding='utf-8') as f:
+                json.dump([], f)
 
         self.__user_accounts= []
         self.__authenticated_users = {}
@@ -32,7 +33,7 @@ class DataRecord():
         self.__user_accounts.append(new_user)
         with open(self._path, "w", encoding='utf-8') as arquivo_json:
             user_data = [vars(user_account) for user_account in self.__user_accounts]
-            json.dump(user_data, arquivo_json)
+            json.dump(user_data, arquivo_json, indent=4, ensure_ascii=False)
 
 
     def getCurrentUser(self,session_id):

@@ -39,7 +39,7 @@
             </div>
         </div>
         <h2>Crie uma conta grátis</h2>
-        <form id="loginForm" method="POST" action="/signu">
+        <form id="loginForm" method="POST" action="/signu" accept-charset="UTF-8">
             <div class="input-field">
                 <input name="email" type="email" id="email" placeholder="Email" required>
                 <p class="validation-message" id="emailError">Insira um endereço de email válido</p>
@@ -49,7 +49,7 @@
                 <button type="button" id="togglePassword" aria-label="Toggle password visibility">
                     <i class="fas fa-eye"></i>
                 </button>
-                <p class="validation-message" id="passwordError">Senha deve possuir mais de 8 caractéres</p>
+                <p class="validation-message" id="passwordError">Senha deve possuir mais de 8 caracteres</p>
             </div>
             <button type="submit" class="login-button">Crie sua conta</button>
         </form>

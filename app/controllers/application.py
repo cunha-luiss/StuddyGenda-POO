@@ -4,6 +4,17 @@ from app.controllers.lembreteRecord import LembreteRecord
 from app.controllers.taskRecord import TaskRecord
 from app.controllers.timerRecord import TimerRecord
 
+def decode_form_data(data):
+    """Decodifica dados de formulário que chegam com encoding incorreto"""
+    if data is None:
+        return ''
+    try:
+        # Tenta decodificar se veio como latin1 mas é UTF-8
+        return data.encode('latin1').decode('utf-8')
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        # Se falhar, retorna o dado original
+        return data
+
 class Application():
 
     def __init__(self):
@@ -82,9 +93,12 @@ class Application():
             return redirect('/login')
         user_email = self.__model.getemail(session_id)
         lembrete_record = LembreteRecord(user_email)
-        titulo = request.forms.get('titulo')
-        desc = request.forms.get('desc')
-        prazo = request.forms.get('prazo')
+        
+        # Capturar dados com encoding correto
+        titulo = decode_form_data(request.forms.get('titulo'))
+        desc = decode_form_data(request.forms.get('desc'))
+        prazo = decode_form_data(request.forms.get('prazo'))
+        
         lembrete_record.book(titulo, desc, prazo)
         return redirect('/appGenda')
 
@@ -103,14 +117,16 @@ class Application():
             return redirect('/login')
         user_email = self.__model.getemail(session_id)
         task_record = TaskRecord(user_email)
-        nome = request.forms.get('nome')
+        
+        # Capturar dados com encoding correto
+        nome = decode_form_data(request.forms.get('nome'))
         prioridade = request.forms.get('prioridade')
         
         # Converter prioridade para inteiro
         try:
             prioridade = int(prioridade)
         except (ValueError, TypeError):
-            prioridade = 3  # Padrão baixa se houver erro
+            prioridade = 3
             
         task_record.book(nome, prioridade)
         return redirect('/appGenda')

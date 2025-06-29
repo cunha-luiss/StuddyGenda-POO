@@ -1,9 +1,50 @@
 from app.controllers.application import Application
 from bottle import Bottle, route, run, request, static_file
 from bottle import redirect, template, response
+import sys
+import os
+import bottle
+
+def decode_form_data(data):
+    """Decodifica dados de formulário que chegam com encoding incorreto"""
+    if data is None:
+        return ''
+    try:
+        # Tenta decodificar se veio como latin1 mas é UTF-8
+        return data.encode('latin1').decode('utf-8')
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        # Se falhar, retorna o dado original
+        return data
+
+# Configuração UTF-8 para o sistema
+if sys.platform.startswith('win'):
+    # Para Windows, garante que o console suporte UTF-8
+    os.system('chcp 65001 > nul 2>&1')
 
 app = Bottle()
 ctl = Application()
+
+# Configurar encoding padrão para templates
+bottle.BaseTemplate.settings = {'autoescape': True}
+
+# Configurar Bottle para UTF-8
+app.config['bottle.request.decode_errors'] = 'replace'
+app.config['bottle.request.encoding'] = 'utf-8'
+
+# Garantir que todas as respostas tenham charset UTF-8
+@app.hook('after_request')
+def enable_cors():
+    if not response.content_type.startswith('text/'):
+        return
+    if 'charset' not in response.content_type:
+        response.content_type += '; charset=UTF-8'
+
+# Configurar request para UTF-8
+@app.hook('before_request')
+def before_request():
+    # Garantir que o request seja decodificado corretamente
+    if hasattr(request, 'forms'):
+        request.environ.setdefault('CONTENT_TYPE', 'application/x-www-form-urlencoded; charset=utf-8')
 
 
 #-----------------------------------------------------------------------------
@@ -22,8 +63,10 @@ def action_login():
 
 @app.route('/logi', method='POST')
 def action_portal():
-    email = request.forms.get('email')
-    password = request.forms.get('password')
+    # Capturar dados com encoding correto
+    email = decode_form_data(request.forms.get('email'))
+    password = decode_form_data(request.forms.get('password'))
+    
     session_id, email= ctl.authenticate_user(email, password)
     if session_id:
         response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
@@ -37,8 +80,10 @@ def action_signup():
 
 @app.route('/signu', method='POST')
 def action_signup_post():
-    email = request.forms.get('email')
-    password = request.forms.get('password')
+    # Capturar dados com encoding correto
+    email = decode_form_data(request.forms.get('email'))
+    password = decode_form_data(request.forms.get('password'))
+    
     model = ctl.new_user()
 
     # Se já existir conta com o email
@@ -48,7 +93,6 @@ def action_signup_post():
     elif len(password) < 8:
         return template('app/views/html/signup', error='Senha deve ter ao menos 8 caracteres')
 
-    # Cria usuário e autentica
     model.book(email, password)
     session_id, _ = ctl.authenticate_user(email, password)
     response.set_cookie('session_id', session_id, httponly=True, secure=True, max_age=3600)
