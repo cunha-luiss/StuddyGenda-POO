@@ -37,6 +37,10 @@
                 <h1>StuddyGenda</h1>
             </div>
             <div class="header-controls">
+                <div id="websocket-status" class="websocket-status disconnected">
+                    🔴 Conectando...
+                    <span id="device-count"></span>
+                </div>
                 <button id="toggleTheme" class="theme-toggle" aria-label="Alternar tema">
                     <i id="themeIcon" class="fas fa-moon"></i>
                 </button>
@@ -304,5 +308,6 @@
     </div>
 
     <script src="/static/js/appGenda.js"></script>
+    <script src="/static/js/websocket.js"></script>
 </body>
 </html>

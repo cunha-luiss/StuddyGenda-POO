@@ -1,1 +1,4 @@
 bottle
+websocket-client
+gevent
+gevent-websocket

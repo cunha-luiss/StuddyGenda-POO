@@ -1084,3 +1084,104 @@ html.light-mode .preset-btn:hover {
 .tab-btn.active::after {
     width: 80%;
 }
+
+/* ===== WEBSOCKET SYNC STYLES ===== */
+.websocket-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-fast);
+    margin-right: 12px;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.websocket-status.connected {
+    background: rgba(76, 175, 80, 0.15);
+    color: var(--success);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.websocket-status.disconnected {
+    background: rgba(244, 67, 54, 0.15);
+    color: var(--error);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.websocket-status.error {
+    background: rgba(255, 149, 0, 0.15);
+    color: var(--warning);
+    border: 1px solid rgba(255, 149, 0, 0.3);
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.sync-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 16px 20px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 10000;
+    max-width: 350px;
+}
+
+.sync-notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.sync-notification i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.sync-notification span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+#device-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-left: 8px;
+}
+
+/* Responsividade para WebSocket elements */
+@media (max-width: 768px) {
+    .websocket-status {
+        display: none; /* Ocultar em telas pequenas para economizar espaço */
+    }
+    
+    .sync-notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        margin: 0 10px;
+    }
+}

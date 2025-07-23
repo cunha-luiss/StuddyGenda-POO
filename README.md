@@ -7,9 +7,9 @@ Projeto da disciplina **Orientação a Objetos (2025.1)** demonstrando os princi
 - **🔄 Interface por Tabs**: Navegação intuitiva e organizada
 - **🌙 Modo Escuro/Claro**: Alternância suave entre temas
 - **📱 Design Responsivo**: Otimizado para todas as telas
-- **🎯 UX Melhorada**: Animações suaves e feedback visual
 - **♿ Acessibilidade**: Suporte a navegação por teclado e leitores de tela
 - **⚡ Performance**: Carregamento otimizado e animações fluidas
+- **🔃 Sincronização em tempo real** entre múltiplos dispositivos
 
 ### 🎭 Sistema de Temas
 - **Modo Escuro**: Design elegante com gradientes e glass morphism
@@ -44,6 +44,11 @@ Projeto da disciplina **Orientação a Objetos (2025.1)** demonstrando os princi
 - **Persistência**: JSON
 - **POO**: Classes e herança implementadas
 
+### Websocket
+- **Servidor WebSocket**: Usando `gevent` e `gevent-websocket`
+- **Gerenciador de Conexões**: `websocketManager.py` controla todas as conexões
+- **Cliente JavaScript**: `websocket.js` gerencia conexões do lado do cliente
+
 ### Frontend
 - **HTML5**: Estrutura semântica moderna
 - **CSS3**: Variáveis CSS, Grid, Flexbox, Animações
@@ -57,13 +62,6 @@ A organização e o planejamento das atividades acadêmicas são desafios comuns
 ## 💡 Solução Proposta
 
 O **StuddyGenda** é um aplicativo web **moderno e intuitivo** que combina funcionalidade com design excepcional. Com navegação por tabs e interface responsiva, oferece uma experiência superior para gerenciamento acadêmico.
-
-### 🎯 Diferenciais da Nova Versão
-- ✨ **Interface Intuitiva**: Tabs organizadas e fáceis de navegar
-- 🎨 **Design Moderno**: Glass morphism e gradientes elegantes
-- 📱 **Totalmente Responsivo**: Funciona perfeitamente em qualquer dispositivo
-- ⚡ **Performance Otimizada**: Carregamento rápido e animações suaves
-- 🌙 **Tema Adaptável**: Modo escuro/claro com preferência salva
 
 ## 🚀 Pré-requisitos e Instalação
 
@@ -80,11 +78,6 @@ Certifique-se de ter o Python instalado. [Download Python](https://www.python.or
 ```bash
 pip install -r requirements.txt
 ```
-
-> **Obs.:** Se não funcionar pelo `requirements.txt`, recomenda-se instalar pelo menos o **bottle**:
-> ```bash
-> pip install bottle
-> ```
 
 ### 4. Execute o servidor Bottle
 ```bash
@@ -103,9 +96,14 @@ A SER IMPLEMENTADO...
 - **Esc**: Fechar modais
 - **Tab**: Navegação acessível
 
+## 🛜 Status de Conexão Webscoket
+No cabeçalho da aplicação:
+- 🟢 **Sincronizado** - Conexão ativa
+- 🔴 **Desconectado** - Sem conexão (tentando reconectar)
+- ⚠️ **Erro de conexão** - Problema na conexão
+
 ## 🔮 **Próximas Funcionalidades**
 
-- 🔄 **Sincronização**: Backup em nuvem
 - 📊 **Dashboard**: Estatísticas de produtividade
 - 🔔 **Notificações**: Lembretes push
 

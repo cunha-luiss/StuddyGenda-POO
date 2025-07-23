@@ -1,4 +1,5 @@
 from app.controllers.dataRecord import DataRecord
+from app.controllers.websocketManager import websocket_manager
 from bottle import template, redirect, request
 from app.controllers.lembreteRecord import LembreteRecord
 from app.controllers.taskRecord import TaskRecord
@@ -100,6 +101,15 @@ class Application():
         prazo = decode_form_data(request.forms.get('prazo'))
         
         lembrete_record.book(titulo, desc, prazo)
+        
+        # Sincronizar via WebSocket
+        lembrete_data = {
+            'titulo': titulo,
+            'desc': desc,
+            'prazo': prazo
+        }
+        websocket_manager.sync_lembrete_added(user_email, lembrete_data)
+        
         return redirect('/appGenda')
 
     def delete_lembrete(self, index):
@@ -109,6 +119,10 @@ class Application():
         user_email = self.__model.getemail(session_id)
         lembrete_record = LembreteRecord(user_email)
         lembrete_record.delete(int(index))
+        
+        # Sincronizar via WebSocket
+        websocket_manager.sync_lembrete_deleted(user_email, int(index))
+        
         return redirect('/appGenda')
 
     def add_task(self):
@@ -129,6 +143,14 @@ class Application():
             prioridade = 3
             
         task_record.book(nome, prioridade)
+        
+        # Sincronizar via WebSocket
+        task_data = {
+            'nome': nome,
+            'prioridade': prioridade
+        }
+        websocket_manager.sync_task_added(user_email, task_data)
+        
         return redirect('/appGenda')
 
     def delete_task(self, index):
@@ -138,6 +160,10 @@ class Application():
         user_email = self.__model.getemail(session_id)
         task_record = TaskRecord(user_email)
         task_record.delete(int(index))
+        
+        # Sincronizar via WebSocket
+        websocket_manager.sync_task_deleted(user_email, int(index))
+        
         return redirect('/appGenda')
 
     def add_timer(self):
@@ -148,6 +174,13 @@ class Application():
         timer_record = TimerRecord(user_email)
         tempo = request.forms.get('tempo')
         timer_record.book(tempo)
+        
+        # Sincronizar via WebSocket
+        timer_data = {
+            'tempo': tempo
+        }
+        websocket_manager.sync_timer_added(user_email, timer_data)
+        
         return redirect('/appGenda')
 
     def delete_timer(self, index):
@@ -157,4 +190,8 @@ class Application():
         user_email = self.__model.getemail(session_id)
         timer_record = TimerRecord(user_email)
         timer_record.delete(int(index))
+        
+        # Sincronizar via WebSocket
+        websocket_manager.sync_timer_deleted(user_email, int(index))
+        
         return redirect('/appGenda')
