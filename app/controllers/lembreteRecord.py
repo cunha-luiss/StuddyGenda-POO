@@ -6,6 +6,7 @@ class LembreteRecord:
     def __init__(self, user_email):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self._path = os.path.join(base_dir, 'db/lembrete', f'{user_email}_lembretes.json')
+        os.makedirs(base_dir, exist_ok=True)
         if not os.path.exists(self._path):
             with open(self._path, 'w', encoding='utf-8') as f:
                 json.dump([], f)
