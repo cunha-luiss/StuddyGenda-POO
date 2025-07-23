@@ -98,15 +98,26 @@ class Application():
         # Capturar dados com encoding correto
         titulo = decode_form_data(request.forms.get('titulo'))
         desc = decode_form_data(request.forms.get('desc'))
-        prazo = decode_form_data(request.forms.get('prazo'))
+        date_str = request.forms.get('prazo_date')  # Nova: data
+        time_str = request.forms.get('prazo_time')  # Nova: hora
         
-        lembrete_record.book(titulo, desc, prazo)
+        # Combinar data e hora em datetime
+        try:
+            from datetime import datetime
+            prazo_datetime = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+            prazo_str = prazo_datetime.isoformat()
+        except (ValueError, TypeError):
+            # Fallback para formato antigo se houver erro
+            prazo_str = request.forms.get('prazo', datetime.now().isoformat())
+        
+        lembrete_record.book(titulo, desc, prazo_str)
         
         # Sincronizar via WebSocket
         lembrete_data = {
             'titulo': titulo,
             'desc': desc,
-            'prazo': prazo
+            'prazo': prazo_str,
+            'prazo_formatted': prazo_datetime.strftime('%d/%m/%Y às %H:%M') if 'prazo_datetime' in locals() else prazo_str
         }
         websocket_manager.sync_lembrete_added(user_email, lembrete_data)
         

@@ -1185,3 +1185,250 @@ html.light-mode .preset-btn:hover {
         margin: 0 10px;
     }
 }
+
+/* ===== DATETIME INPUTS ===== */
+.datetime-inputs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.datetime-inputs .input-group {
+    flex: 1;
+}
+
+.datetime-inputs .input-group input[type="date"],
+.datetime-inputs .input-group input[type="time"] {
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-glass);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+}
+
+.datetime-inputs .input-group input[type="date"]:focus,
+.datetime-inputs .input-group input[type="time"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* ===== QUICK REMINDERS ===== */
+.quick-reminders {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.quick-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-right: 4px;
+}
+
+.btn-quick {
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-quick:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* ===== LEMBRETE ENHANCEMENTS ===== */
+.item-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.prazo-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.time-remaining {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-fast);
+}
+
+.time-remaining.due-soon {
+    background: rgba(255, 149, 0, 0.15);
+    color: var(--warning);
+    border: 1px solid rgba(255, 149, 0, 0.3);
+    animation: pulse-warning 2s infinite;
+}
+
+.time-remaining.expired {
+    background: rgba(244, 67, 54, 0.15);
+    color: var(--error);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    animation: pulse-error 2s infinite;
+}
+
+@keyframes pulse-warning {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-error {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.lembrete-card.due-soon {
+    border-left: 4px solid var(--warning);
+    box-shadow: var(--shadow-md), 0 0 20px rgba(255, 149, 0, 0.2);
+}
+
+.lembrete-card.expired {
+    border-left: 4px solid var(--error);
+    box-shadow: var(--shadow-md), 0 0 20px rgba(244, 67, 54, 0.2);
+}
+
+/* ===== LEMBRETE NOTIFICATIONS ===== */
+.lembrete-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--warning);
+    box-shadow: var(--shadow-xl);
+    max-width: 400px;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 10001;
+}
+
+.lembrete-notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.lembrete-notification.expired {
+    border-left-color: var(--error);
+}
+
+.lembrete-notification .notification-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.lembrete-notification .notification-icon {
+    font-size: 1.5rem;
+    color: var(--warning);
+}
+
+.lembrete-notification.expired .notification-icon {
+    color: var(--error);
+}
+
+.lembrete-notification .notification-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.lembrete-notification .notification-content {
+    margin-bottom: 12px;
+}
+
+.lembrete-notification .notification-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.lembrete-notification .notification-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.lembrete-notification .notification-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.lembrete-notification .btn-notification {
+    padding: 6px 12px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.lembrete-notification .btn-dismiss {
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+}
+
+.lembrete-notification .btn-dismiss:hover {
+    background: var(--border-color);
+}
+
+.lembrete-notification .btn-action {
+    background: var(--primary-color);
+    color: white;
+}
+
+.lembrete-notification .btn-action:hover {
+    background: var(--primary-dark);
+}
+
+/* Responsividade para lembretes */
+@media (max-width: 768px) {
+    .datetime-inputs {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .lembrete-notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        margin: 0;
+    }
+    
+    .item-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

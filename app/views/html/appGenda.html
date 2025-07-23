@@ -101,9 +101,22 @@
                                     <i class="fas fa-align-left"></i>
                                     <textarea name="desc" placeholder="Descrição detalhada" rows="3"></textarea>
                                 </div>
-                                <div class="input-group">
-                                    <i class="fas fa-calendar-day"></i>
-                                    <input type="text" name="prazo" placeholder="Prazo (DD/MM/AAAA HH:MM)">
+                                <div class="datetime-inputs">
+                                    <div class="input-group">
+                                        <i class="fas fa-calendar-day"></i>
+                                        <input type="date" name="prazo_date" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <i class="fas fa-clock"></i>
+                                        <input type="time" name="prazo_time" required>
+                                    </div>
+                                </div>
+                                <div class="quick-reminders">
+                                    <span class="quick-label">Lembretes rápidos:</span>
+                                    <button type="button" class="btn-quick" onclick="setQuickReminder(1)">1h</button>
+                                    <button type="button" class="btn-quick" onclick="setQuickReminder(2)">2h</button>
+                                    <button type="button" class="btn-quick" onclick="setQuickReminder(24)">1 dia</button>
+                                    <button type="button" class="btn-quick" onclick="setQuickReminder(168)">1 semana</button>
                                 </div>
                                 <button type="submit" class="btn-primary">
                                     <i class="fas fa-plus"></i>
@@ -117,7 +130,7 @@
                         <div class="items-grid">
                             % if lembretes:
                                 % for i, lembrete in enumerate(lembretes):
-                                <div class="item-card lembrete-card">
+                                <div class="item-card lembrete-card" data-lembrete-index="{{i}}">
                                     <div class="item-header">
                                         <h4>{{lembrete.titulo}}</h4>
                                         <button class="delete-btn" onclick="confirmDelete('/delete_lembrete/{{i}}', 'lembrete')">
@@ -126,12 +139,19 @@
                                     </div>
                                     <div class="item-content">
                                         <p>{{lembrete.desc}}</p>
-                                        % if lembrete.prazo:
                                         <div class="item-meta">
-                                            <i class="fas fa-clock"></i>
-                                            <span>{{lembrete.prazo}}</span>
+                                            <div class="prazo-info">
+                                                <i class="fas fa-clock"></i>
+                                                <span class="prazo-text">{{lembrete.get_formatted_prazo()}}</span>
+                                            </div>
+                                            <div class="time-remaining 
+                                                {% if lembrete.is_expired() %}expired
+                                                {% elif lembrete.is_due_soon() %}due-soon
+                                                {% endif %}">
+                                                <i class="fas fa-hourglass-half"></i>
+                                                <span>{{lembrete.get_time_remaining()}}</span>
+                                            </div>
                                         </div>
-                                        % end
                                     </div>
                                 </div>
                                 % end
@@ -309,5 +329,6 @@
 
     <script src="/static/js/appGenda.js"></script>
     <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/lembretes.js"></script>
 </body>
 </html>

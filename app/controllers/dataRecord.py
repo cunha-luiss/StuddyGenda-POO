@@ -72,3 +72,7 @@ class DataRecord():
     def logout(self, session_id):
         if session_id in self.__authenticated_users:
             del self.__authenticated_users[session_id] # Remove o usuário logado
+    
+    def get_active_users(self):
+        """Retorna lista de emails dos usuários com sessões ativas"""
+        return [user.email for user in self.__authenticated_users.values()]

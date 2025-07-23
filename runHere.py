@@ -1,5 +1,6 @@
 from app.controllers.application import Application
 from app.controllers.websocketManager import websocket_manager
+from app.controllers.lembreteNotificationService import notification_service
 from bottle import Bottle, route, run, request, static_file
 from bottle import redirect, template, response
 import sys
@@ -206,12 +207,19 @@ def handle_websocket():
 
 
 if __name__ == '__main__':
+    # Iniciar serviço de notificações de lembretes
+    notification_service.start()
+    
     # Usar servidor gevent com suporte a WebSocket
     try:
         server = WSGIServer(('0.0.0.0', 8080), app, handler_class=WebSocketHandler)
         print("Servidor iniciado em http://0.0.0.0:8080 com suporte a WebSocket")
+        print("🔔 Serviço de notificações de lembretes ativo")
         server.serve_forever()
     except ImportError:
         # Fallback para servidor padrão do Bottle se gevent não estiver disponível
         print("Gevent não disponível, usando servidor padrão (sem WebSocket)")
         run(app, host='0.0.0.0', port=8080, debug=True)
+    except KeyboardInterrupt:
+        print("\n🛑 Parando servidor...")
+        notification_service.stop()

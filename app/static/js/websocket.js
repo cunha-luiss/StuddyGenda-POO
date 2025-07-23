@@ -125,6 +125,10 @@ class WebSocketSync {
                 this.handleTimerDeleted(message.data);
                 break;
                 
+            case 'lembrete_notification':
+                this.handleLembreteNotification(message.data);
+                break;
+                
             case 'pong':
                 // Resposta do heartbeat - conexão está viva
                 break;
@@ -163,6 +167,82 @@ class WebSocketSync {
     handleTimerDeleted(data) {
         this.showSyncNotification('Timer removido em outro dispositivo');
         this.refreshTimers();
+    }
+    
+    handleLembreteNotification(data) {
+        // Mostrar notificação de lembrete próximo ao vencimento ou vencido
+        this.showLembreteNotification(data);
+    }
+    
+    showLembreteNotification(lembreteData) {
+        // Criar notificação de lembrete
+        const notification = document.createElement('div');
+        notification.className = `lembrete-notification ${lembreteData.type === 'expired' ? 'expired' : ''}`;
+        
+        const iconClass = lembreteData.type === 'expired' ? 'fa-exclamation-triangle' : 'fa-bell';
+        const titleText = lembreteData.type === 'expired' ? 'Lembrete Vencido!' : 'Lembrete Próximo!';
+        
+        notification.innerHTML = `
+            <div class="notification-header">
+                <i class="fas ${iconClass} notification-icon"></i>
+                <h4 class="notification-title">${titleText}</h4>
+            </div>
+            <div class="notification-content">
+                <h5>${lembreteData.titulo}</h5>
+                <p class="notification-desc">${lembreteData.desc}</p>
+                <div class="notification-time">
+                    <i class="fas fa-clock"></i>
+                    <span>Prazo: ${lembreteData.prazo}</span>
+                </div>
+                <div class="notification-time">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>${lembreteData.time_remaining}</span>
+                </div>
+            </div>
+            <div class="notification-actions">
+                <button class="btn-notification btn-dismiss" onclick="this.parentElement.parentElement.remove()">
+                    Dispensar
+                </button>
+                <button class="btn-notification btn-action" onclick="this.parentElement.parentElement.remove(); window.location.reload();">
+                    Ver Lembretes
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Mostrar animação
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        // Reproduzir som se suportado
+        this.playNotificationSound();
+        
+        // Auto-remover após tempo maior (lembretes são mais importantes)
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }, 15000); // 15 segundos para dar tempo de ler
+    }
+    
+    playNotificationSound() {
+        // Tentar reproduzir som de notificação
+        try {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMeAjiF0PPMfykEJG7A7+WTQQ4UXrPm6q5dGgxGltn0wWUdAkaI1fXQ');
+            audio.volume = 0.1;
+            audio.play().catch(() => {
+                // Ignorar erro se não conseguir reproduzir som
+            });
+        } catch (e) {
+            // Ignorar erro de som
+        }
     }
     
     refreshLembretes() {
