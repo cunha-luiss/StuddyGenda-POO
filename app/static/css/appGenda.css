@@ -1248,6 +1248,18 @@ html.light-mode .preset-btn:hover {
     transform: translateY(-2px);
 }
 
+.btn-debug {
+    background: rgba(66, 165, 245, 0.1) !important;
+    border-color: rgba(66, 165, 245, 0.3) !important;
+    color: #42a5f5 !important;
+}
+
+.btn-debug:hover {
+    background: #42a5f5 !important;
+    color: white !important;
+    border-color: #42a5f5 !important;
+}
+
 /* ===== LEMBRETE ENHANCEMENTS ===== */
 .item-meta {
     display: flex;

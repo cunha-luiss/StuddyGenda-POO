@@ -4,6 +4,7 @@ from datetime import datetime
 from app.controllers.lembreteRecord import LembreteRecord
 from app.controllers.websocketManager import websocket_manager
 from app.controllers.dataRecord import DataRecord
+from app.controllers.timezoneHelper import timezone_helper
 
 class LembreteNotificationService:
     """Serviço de notificações para lembretes próximos do vencimento"""
@@ -21,7 +22,10 @@ class LembreteNotificationService:
             self.is_running = True
             self.thread = threading.Thread(target=self._run_notification_loop, daemon=True)
             self.thread.start()
-            print("🔔 Serviço de notificações de lembretes iniciado")
+            timezone_info = timezone_helper.get_timezone_info()
+            print(f"🔔 Serviço de notificações de lembretes iniciado")
+            print(f"🌍 Timezone detectado: {timezone_info['timezone']}")
+            print(f"⏰ Hora local: {timezone_info['current_time']}")
     
     def stop(self):
         """Para o serviço de notificações"""

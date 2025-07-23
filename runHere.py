@@ -1,6 +1,7 @@
 from app.controllers.application import Application
 from app.controllers.websocketManager import websocket_manager
 from app.controllers.lembreteNotificationService import notification_service
+from app.controllers.timezoneHelper import timezone_helper
 from bottle import Bottle, route, run, request, static_file
 from bottle import redirect, template, response
 import sys
@@ -138,6 +139,26 @@ def logout():
     ctl.logout_user()
     response.delete_cookie('session_id')
     return redirect('/')
+
+@app.route('/timezone-info', method='GET')
+def timezone_info():
+    """Rota de debug para mostrar informações de timezone"""
+    info = timezone_helper.get_timezone_info()
+    local_now = timezone_helper.get_local_now()
+    
+    debug_info = {
+        'timezone_info': info,
+        'local_time': str(local_now),
+        'local_formatted': timezone_helper.to_local_string(local_now),
+        'utc_time': timezone_helper.to_utc_isoformat(local_now),
+        'platform': {
+            'system': os.name,
+            'platform': sys.platform
+        }
+    }
+    
+    response.content_type = 'application/json'
+    return json.dumps(debug_info, indent=2, ensure_ascii=False)
 
 @app.route('/websocket')
 def handle_websocket():

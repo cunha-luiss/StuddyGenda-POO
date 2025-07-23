@@ -5,10 +5,34 @@
 document.addEventListener('DOMContentLoaded', function() {
     initializeLembreteFeatures();
     updateLembreteTimers();
+    detectClientTimezone();
     
     // Atualizar timers a cada minuto
     setInterval(updateLembreteTimers, 60000);
 });
+
+function detectClientTimezone() {
+    try {
+        // Detectar timezone do navegador
+        const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const offset = new Date().getTimezoneOffset();
+        
+        // Enviar informação para o servidor se necessário
+        const timezoneInfo = {
+            timezone: clientTimezone,
+            offset: offset,
+            offsetString: new Date().toString().match(/([A-Z]{3,4}[+-]\d{4})/)?.[1] || 'Unknown'
+        };
+        
+        // Armazenar no localStorage para uso futuro
+        localStorage.setItem('clientTimezone', JSON.stringify(timezoneInfo));
+        
+        console.log('🌍 Timezone detectado:', timezoneInfo);
+        
+    } catch (error) {
+        console.warn('⚠️ Não foi possível detectar timezone do cliente:', error);
+    }
+}
 
 function initializeLembreteFeatures() {
     // Configurar valores padrão para inputs de data/hora
@@ -26,31 +50,36 @@ function setDefaultDateTime() {
     const timeInput = document.querySelector('input[name="prazo_time"]');
     
     if (dateInput && timeInput) {
+        // Usar timezone do cliente para definir valores padrão
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
         
         // Definir data padrão como amanhã
-        dateInput.value = tomorrow.toISOString().split('T')[0];
+        const year = tomorrow.getFullYear();
+        const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const day = String(tomorrow.getDate()).padStart(2, '0');
+        dateInput.value = `${year}-${month}-${day}`;
         
         // Definir hora padrão como 9:00
         timeInput.value = '09:00';
         
-        // Validar que a data não seja no passado
+        // Validar que a data não seja no passado (usando timezone local)
         dateInput.addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
+            const selectedDate = new Date(this.value + 'T00:00:00');
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
             if (selectedDate < today) {
-                this.value = today.toISOString().split('T')[0];
+                const todayStr = today.toISOString().split('T')[0];
+                this.value = todayStr;
                 showToast('⚠️ A data não pode ser no passado', 'warning');
             }
         });
         
-        // Validar hora se for hoje
+        // Validar hora se for hoje (usando timezone local)
         timeInput.addEventListener('change', function() {
-            const selectedDate = new Date(dateInput.value);
+            const selectedDate = new Date(dateInput.value + 'T00:00:00');
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
@@ -59,10 +88,12 @@ function setDefaultDateTime() {
                 const selectedTime = new Date();
                 selectedTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
                 
-                if (selectedTime <= new Date()) {
-                    const futureTime = new Date();
-                    futureTime.setHours(futureTime.getHours() + 1);
-                    this.value = futureTime.toTimeString().slice(0, 5);
+                const now = new Date();
+                if (selectedTime <= now) {
+                    const futureTime = new Date(now.getTime() + 60 * 60 * 1000); // +1 hora
+                    const futureHours = String(futureTime.getHours()).padStart(2, '0');
+                    const futureMinutes = String(futureTime.getMinutes()).padStart(2, '0');
+                    this.value = `${futureHours}:${futureMinutes}`;
                     showToast('⚠️ O horário deve ser no futuro', 'warning');
                 }
             }
@@ -90,12 +121,19 @@ function validateLembreteForm(event) {
         return false;
     }
     
-    // Validar se data/hora não é no passado
-    const selectedDateTime = new Date(`${dateInput.value}T${timeInput.value}`);
-    if (selectedDateTime <= new Date()) {
-        event.preventDefault();
-        showToast('❌ A data e hora devem ser no futuro', 'error');
-        return false;
+    // Validar se data/hora não é no passado (usando timezone local)
+    try {
+        const selectedDateTime = new Date(`${dateInput.value}T${timeInput.value}:00`);
+        const now = new Date();
+        
+        if (selectedDateTime <= now) {
+            event.preventDefault();
+            showToast('❌ A data e hora devem ser no futuro', 'error');
+            return false;
+        }
+    } catch (error) {
+        console.warn('Erro na validação de data/hora:', error);
+        // Permitir continuar se houver erro na validação
     }
     
     return true;
@@ -217,12 +255,38 @@ function setQuickReminder(hours) {
     const timeInput = document.querySelector('input[name="prazo_time"]');
     
     if (dateInput && timeInput) {
+        // Usar timezone local para cálculos
         const futureDate = new Date();
         futureDate.setHours(futureDate.getHours() + hours);
         
-        dateInput.value = futureDate.toISOString().split('T')[0];
-        timeInput.value = futureDate.toTimeString().slice(0, 5);
+        // Formatar para inputs HTML
+        const year = futureDate.getFullYear();
+        const month = String(futureDate.getMonth() + 1).padStart(2, '0');
+        const day = String(futureDate.getDate()).padStart(2, '0');
+        const hour = String(futureDate.getHours()).padStart(2, '0');
+        const minute = String(futureDate.getMinutes()).padStart(2, '0');
         
-        showToast(`⏰ Lembrete configurado para ${hours} hora${hours !== 1 ? 's' : ''} a partir de agora`, 'info');
+        dateInput.value = `${year}-${month}-${day}`;
+        timeInput.value = `${hour}:${minute}`;
+        
+        const hoursText = hours !== 1 ? 's' : '';
+        showToast(`⏰ Lembrete configurado para ${hours} hora${hoursText} a partir de agora`, 'info');
     }
+}
+
+// Função para debug de timezone
+function showTimezoneDebug() {
+    fetch('/timezone-info')
+        .then(response => response.json())
+        .then(data => {
+            console.log('🌍 Informações de Timezone:', data);
+            
+            const clientInfo = JSON.parse(localStorage.getItem('clientTimezone') || '{}');
+            console.log('💻 Timezone do Cliente:', clientInfo);
+            
+            showToast(`Timezone: ${data.timezone_info.timezone}`, 'info');
+        })
+        .catch(error => {
+            console.error('Erro ao obter info de timezone:', error);
+        });
 }

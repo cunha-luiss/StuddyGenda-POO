@@ -1,5 +1,6 @@
 from app.controllers.dataRecord import DataRecord
 from app.controllers.websocketManager import websocket_manager
+from app.controllers.timezoneHelper import timezone_helper
 from bottle import template, redirect, request
 from app.controllers.lembreteRecord import LembreteRecord
 from app.controllers.taskRecord import TaskRecord
@@ -101,23 +102,28 @@ class Application():
         date_str = request.forms.get('prazo_date')  # Nova: data
         time_str = request.forms.get('prazo_time')  # Nova: hora
         
-        # Combinar data e hora em datetime
+        # Criar datetime local e converter para UTC para armazenamento
         try:
+            local_datetime = timezone_helper.create_local_datetime(date_str, time_str)
+            prazo_utc = timezone_helper.to_utc_isoformat(local_datetime)
+            prazo_formatted = timezone_helper.to_local_string(local_datetime)
+        except Exception as e:
+            print(f"❌ Erro ao processar data/hora: {e}")
+            # Fallback para formato antigo
             from datetime import datetime
             prazo_datetime = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
-            prazo_str = prazo_datetime.isoformat()
-        except (ValueError, TypeError):
-            # Fallback para formato antigo se houver erro
-            prazo_str = request.forms.get('prazo', datetime.now().isoformat())
+            prazo_utc = prazo_datetime.isoformat()
+            prazo_formatted = prazo_datetime.strftime('%d/%m/%Y às %H:%M')
         
-        lembrete_record.book(titulo, desc, prazo_str)
+        lembrete_record.book(titulo, desc, prazo_utc)
         
         # Sincronizar via WebSocket
         lembrete_data = {
             'titulo': titulo,
             'desc': desc,
-            'prazo': prazo_str,
-            'prazo_formatted': prazo_datetime.strftime('%d/%m/%Y às %H:%M') if 'prazo_datetime' in locals() else prazo_str
+            'prazo': prazo_utc,
+            'prazo_formatted': prazo_formatted,
+            'timezone_info': timezone_helper.get_timezone_info()
         }
         websocket_manager.sync_lembrete_added(user_email, lembrete_data)
         
