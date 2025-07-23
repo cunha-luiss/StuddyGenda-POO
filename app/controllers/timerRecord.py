@@ -6,7 +6,10 @@ class TimerRecord:
     def __init__(self, user_email):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self._path = os.path.join(base_dir, 'db/timer', f'{user_email}_timers.json')
-        os.makedirs(base_dir, exist_ok=True)
+
+        db_dir = os.path.dirname(self._path)
+        os.makedirs(db_dir, exist_ok=True)
+        
         if not os.path.exists(self._path):
             with open(self._path, 'w', encoding='utf-8') as f:
                 json.dump([], f)
