@@ -7,7 +7,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'controllers'))
 
 try:
-    from timezoneHelper import timezone_helper
+    from app.controllers.timezoneHelper import timezone_helper
 except ImportError:
     # Fallback se não conseguir importar
     print("⚠️ TimezoneHelper não disponível, usando datetime padrão")
