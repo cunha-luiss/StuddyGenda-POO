@@ -1,6 +1,7 @@
 # StuddyGenda - Sua Agenda Inteligente 📚✨
 
-Projeto da disciplina **Orientação a Objetos (2025.1)** demonstrando os principais pilares da Programação Orientada a Objetos (POO) através de um sistema web elegante e funcional.
+Projeto da disciplina **Orientação a Objetos (2025.1)** demonstrando os principais pilares da Programação Orientada a Objetos (POO) através de um sistema web elegante e funcional. 
+[Acesse aqui](https://studdy-genda.onrender.com)
 
 ### ✨ Principais Funções Implementadas
 
